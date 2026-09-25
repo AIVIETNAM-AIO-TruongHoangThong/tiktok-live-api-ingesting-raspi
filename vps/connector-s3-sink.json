@@ -1,0 +1,23 @@
+{
+  "name": "tiktok-s3-bronze-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+    "tasks.max": "2",
+    "topics": "tiktok.events.npc,tiktok.events.ecommerce",
+    "s3.bucket.name": "tiktok-lake",
+    "s3.part.size": "67108864",
+    "store.url": "http://minio:9000",
+    "s3.region": "us-east-1",
+    "storage.class": "io.confluent.connect.s3.storage.S3Storage",
+    "format.class": "io.confluent.connect.s3.format.json.JsonFormat",
+    "flush.size": "500",
+    "rotate.interval.ms": "300000",
+    "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
+    "path.format": "'year'=YYYY/'month'=MM/'day'=dd/'hour'=HH",
+    "partition.duration.ms": "3600000",
+    "timestamp.extractor": "RecordField",
+    "timestamp.field": "received_at",
+    "locale": "en_US",
+    "timezone": "UTC"
+  }
+}

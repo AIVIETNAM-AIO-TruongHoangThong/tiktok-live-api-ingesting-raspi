@@ -1,0 +1,5 @@
+# TikTok Live Pipeline — Nightly Bronze → Silver S3 Parquet transform
+# Runs at 3am UTC every day. Reads raw JSON from MinIO, writes Parquet back.
+# Install with: crontab vps/crontab.txt
+
+0 3 * * * cd /opt/tiktok-pipeline && set -a && source vps/.env && set +a && python vps/transform.py >> /var/log/tiktok-transform.log 2>&1

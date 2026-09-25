@@ -1,0 +1,132 @@
+version: '3.8'
+
+# ---------------------------------------------------------------------------
+# TikTok Live Pipeline - Redpanda + Kafka Connect
+# Deploy as a Compose app in Dokploy shared-services project.
+#
+# ClickHouse is deployed separately via the Dokploy template (one click).
+# All services join dokploy-network so they can reach:
+#   - minio:9000      (MinIO S3 API, already on dokploy-network)
+#   - clickhouse:8123 (ClickHouse, deployed via Dokploy template)
+# ---------------------------------------------------------------------------
+
+networks:
+  dokploy-network:
+    external: true   # Created and managed by Dokploy - do not remove this line
+
+services:
+
+  # --------------------------------------------------------------------------
+  # Redpanda - Kafka-compatible broker
+  # Pi connects to port 19092 (external). Kafka Connect + ClickHouse use
+  # the internal port 9092 via dokploy-network.
+  # --------------------------------------------------------------------------
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:latest
+    container_name: redpanda
+    networks:
+      - dokploy-network
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "2"
+      - --memory
+      - "512M"
+      - --reserve-memory
+      - "0M"
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      # IMPORTANT: Replace YOUR_VPS_IP with your Dokploy VPS public IP or domain
+      - internal://redpanda:9092,external://YOUR_VPS_IP:19092
+      - --schema-registry-addr
+      - internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --pandaproxy-addr
+      - internal://0.0.0.0:8082,external://0.0.0.0:18082
+    ports:
+      - "19092:19092"   # Kafka API - Pi connects here
+      - "9644:9644"     # Redpanda Admin API
+      - "18081:18081"   # Schema Registry (external)
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.*true'"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Redpanda Console - web UI to inspect topics and messages
+  # Access at: http://YOUR_VPS_IP:18080
+  # --------------------------------------------------------------------------
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:latest
+    container_name: redpanda-console
+    networks:
+      - dokploy-network
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:9092"]
+        schemaRegistry:
+          enabled: true
+          urls: ["http://redpanda:8081"]
+    entrypoint: /bin/sh
+    command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
+    ports:
+      - "18080:8080"    # Web UI
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Kafka Connect - Confluent S3 Sink for Bronze JSON archive to MinIO
+  # Reads from both Kafka topics and writes time-partitioned JSON to MinIO.
+  # Uses MinIO credentials from .env file.
+  # --------------------------------------------------------------------------
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:7.6.0
+    container_name: kafka-connect
+    networks:
+      - dokploy-network
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "redpanda:9092"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+      CONNECT_REST_PORT: "8083"
+      CONNECT_GROUP_ID: "tiktok-connect-group"
+
+      # Internal Kafka topics for Connect coordination (auto-created)
+      CONNECT_CONFIG_STORAGE_TOPIC: "_connect-configs"
+      CONNECT_OFFSET_STORAGE_TOPIC: "_connect-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "_connect-status"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+
+      # JSON converters (no schema registry needed for simple JSON)
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+
+      # MinIO S3 credentials (injected from .env) - reaches minio:9000 via dokploy-network
+      AWS_ACCESS_KEY_ID: "${MINIO_ROOT_USER}"
+      AWS_SECRET_ACCESS_KEY: "${MINIO_ROOT_PASSWORD}"
+    ports:
+      - "8083:8083"     # Kafka Connect REST API
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  redpanda-data:

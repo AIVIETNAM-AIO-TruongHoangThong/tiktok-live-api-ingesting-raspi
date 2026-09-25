@@ -1,0 +1,33 @@
+[Unit]
+Description=TikTok Live 24/7 Multi-Stream Watcher
+Documentation=https://github.com/youruser/tiktok-live-npc
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/tiktok-live-npc/pi
+
+# Use the uv-managed virtual environment Python
+ExecStart=/home/pi/tiktok-live-npc/.venv/bin/python watcher.py
+
+# Restart policy: always restart, wait 15s between attempts
+# This handles: stream API errors, network drops, TikTok rate limits
+Restart=always
+RestartSec=15
+
+# Give it 30s to stop gracefully before force-killing
+TimeoutStopSec=30
+
+# Log to systemd journal (query with: journalctl -u tiktok-watcher -f)
+StandardOutput=journal
+StandardError=journal
+
+# Resource limits - Pi 4B has 8GB, keep this process lean
+MemoryMax=512M
+CPUQuota=80%
+
+[Install]
+WantedBy=multi-user.target

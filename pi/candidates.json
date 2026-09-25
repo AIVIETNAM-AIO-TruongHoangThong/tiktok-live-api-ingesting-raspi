@@ -1,0 +1,182 @@
+{
+  "updated_at": "2026-09-25T10:31:20.289338+00:00",
+  "total_streamers": 11,
+  "streamers": {
+    "manhuynn": {
+      "username": "manhuynn",
+      "category": "npc",
+      "archetype": "physical_challenge",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.279923+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "milktea_girl2": {
+      "username": "milktea_girl2",
+      "category": "npc",
+      "archetype": "pk_battler",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.280672+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "natuecoco": {
+      "username": "natuecoco",
+      "category": "npc",
+      "archetype": "pure_robotic",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.281950+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "halinhofficial": {
+      "username": "halinhofficial",
+      "category": "ecommerce",
+      "archetype": "beauty",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.282661+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "maybelline_vn": {
+      "username": "maybelline_vn",
+      "category": "ecommerce",
+      "archetype": "beauty",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.283631+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "lorealparis_vn": {
+      "username": "lorealparis_vn",
+      "category": "ecommerce",
+      "archetype": "beauty",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.284419+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "dirtycoins.vn": {
+      "username": "dirtycoins.vn",
+      "category": "ecommerce",
+      "archetype": "fashion",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.285368+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "routine_vietnam": {
+      "username": "routine_vietnam",
+      "category": "ecommerce",
+      "archetype": "fashion",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.286266+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "levents.vn": {
+      "username": "levents.vn",
+      "category": "ecommerce",
+      "archetype": "fashion",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.287030+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "fptshop.official": {
+      "username": "fptshop.official",
+      "category": "ecommerce",
+      "archetype": "tech",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.287749+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    },
+    "haidilaovietnam": {
+      "username": "haidilaovietnam",
+      "category": "ecommerce",
+      "archetype": "food",
+      "source": "seed",
+      "discovered_at": "2026-09-25T10:31:20.288498+00:00",
+      "status": "candidate",
+      "cooldown_until": null,
+      "stats": {
+        "total_sessions": 0,
+        "peak_viewers": 0,
+        "total_diamonds_seen": 0,
+        "last_live": null,
+        "last_checked": null
+      }
+    }
+  }
+}

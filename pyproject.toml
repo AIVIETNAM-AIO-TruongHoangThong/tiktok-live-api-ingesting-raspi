@@ -1,0 +1,35 @@
+[project]
+name = "tiktok-live-npc"
+version = "0.1.0"
+description = "TikTok Live 24/7 multi-stream data pipeline (Pi edge → Kafka → ClickHouse + MinIO)"
+readme = "README.md"
+authors = [
+    { name = "Thong Truong", email = "contact@thongtruong.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "duckdb>=1.5.5",
+    "pydantic>=2.13.5",
+    "tiktoklive>=7.0.1",
+]
+
+[project.optional-dependencies]
+# Raspberry Pi edge ingestion — install with: uv sync --extra pi
+# Adds aiokafka (Kafka producer) and pyyaml (config loader)
+# Does NOT install DuckDB on the Pi (not needed there)
+pi = [
+    "aiokafka>=0.11.0",
+    "pyyaml>=6.0.2",
+]
+# VPS nightly transform — install with: uv sync --extra vps
+# DuckDB is already in base deps, this group is a placeholder for future VPS-only deps
+vps = [
+    "duckdb>=1.5.5",
+]
+
+[project.scripts]
+tiktok-live-npc = "tiktok_live_npc:main"
+
+[build-system]
+requires = ["uv_build>=0.12.18,<0.13.0"]
+build-backend = "uv_build"

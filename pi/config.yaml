@@ -1,0 +1,47 @@
+# TikTok Live 24/7 Watcher Configuration
+
+kafka:
+  bootstrap_servers: "YOUR_VPS_IP:19092"  # Dokploy VPS external Kafka port
+
+# Maximum concurrent streams on Raspberry Pi (8GB RAM can easily handle 10-15)
+max_concurrent_streams: 10
+
+# Polling intervals
+poll_interval_seconds: 45
+poll_jitter_seconds: 3
+
+# Production Logging & Observability
+logging:
+  level: "INFO"                          # INFO for production (silent polling), DEBUG for troubleshooting
+  heartbeat_interval_seconds: 300        # Periodic 5-minute telemetry rollup
+  log_file: "/var/log/tiktok-watcher.log" # Auto-rotated (max 10MB, 2 backups)
+
+# Automated Value-Qualification Gate
+# Probes each newly live stream for a 90-second probation window.
+# If a streamer has < min_viewers and 0 gifts, they are disconnected early
+# and put on cooldown so the Pi slot is freed for active streamers.
+qualification:
+  enabled: true
+  probation_seconds: 90            # Duration of the test window (seconds)
+  min_viewers: 5                   # Minimum viewers required to pass
+  min_events_probation: 1          # At least 1 gift, comment, or shop product
+  cooldown_hours_on_fail: 3        # If failed, don't re-check for 3 hours
+
+# Initial starter seeds (auto-expanded via PK battle spidering)
+categories:
+  npc:
+    streamers:
+      - manhuynn
+      - milktea_girl2
+      - natuecoco
+
+  ecommerce:
+    streamers:
+      - halinhofficial
+      - maybelline_vn
+      - lorealparis_vn
+      - dirtycoins.vn
+      - routine_vietnam
+      - levents.vn
+      - fptshop.official
+      - haidilaovietnam
